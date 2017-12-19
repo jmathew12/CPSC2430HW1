@@ -1,0 +1,133 @@
+/*
+  James Mathew
+  Stack.cpp
+  Susan Reeder
+  CPSC 2430
+  10/03/2017
+  This Stack class stores characters.
+*/
+
+#include "stack.h"
+#include <iostream>
+
+using namespace std;
+
+// Constructor: creates an empty stack of a length that is provided by the 
+//		user.
+Stack :: Stack(int stackSize)
+{
+  if (stackSize < 2) {
+    size = 16;
+  } else {
+    size = stackSize;
+  }
+  letterList = new char[size];
+  top = 0;
+}
+
+// Destructor - destroys the stack obeject
+Stack :: ~Stack()
+{
+  delete [] letterList;
+}
+
+// Overload assignment
+Stack& Stack :: operator = (const Stack& rhs)
+{
+  if (this != &rhs) {
+    top = rhs.top;
+    size = rhs.size;
+    delete [] letterList;
+    letterList = new char[size];
+    for (int i = 0; i < top; i++) {
+      letterList[i] = rhs.letterList[i];
+    }
+  }
+  return *this;
+}
+
+// Copy constructor - Takes another stack obeject and copys to the current 
+//		one.
+Stack :: Stack(const Stack& s)
+{
+  *this = s;
+}
+
+
+// isEmpty - Checks to see if the stack is empty, returns true if empty, else 
+//		returns false.
+bool Stack :: isEmpty() const
+{
+  if (top == 0) {
+    return true;
+  }
+  return false;
+}
+
+// full - Checks to see if the stack is full, returns true if full, else 
+//		returns false.
+bool Stack :: full()
+{
+  if (size == top) {
+    return true;
+  }
+  return false;
+}
+
+// reSize - Increases the size of the stack by 1.5 times the originial 
+//		length and returns true. 
+bool Stack :: reSize(char* letterList)
+{
+  char *tempList;
+  size += (size/2);
+  tempList = new char[size];
+  for (int i = 0; i < size; i++) {
+    tempList[i] = letterList[i];
+  }
+	delete [] letterList;
+	letterList = new char[size];
+	for (int i = 0; i < size; i++) {
+		letterList[i] = tempList[i];
+  }
+  letterList = tempList;
+  delete [] tempList;
+  return true;
+}
+
+// push - Adds a character data to the stack and returns true if successful.
+bool Stack :: push(char data)
+{
+  if (full()) {
+    reSize(letterList);
+  }
+  letterList[top] = data;
+  top++;
+  return true;
+}	
+
+//pop - removes the first character and assigns to data. returns true if 
+//		successful
+bool Stack :: pop(char& data) 
+{
+  // create if empty
+  if (!isEmpty()) {
+    top--;
+    data = letterList[top];
+    return true;
+  }
+  return false;
+}
+
+// peek - returns the character at the index indx.
+char Stack :: peek(int indx) const
+{
+  return letterList[indx];
+}
+
+ void Stack :: toString() const
+  {
+	for (int i = 0; i < size; i++) {
+		cout << letterList[i] << " ";
+	}
+	cout << "" << endl;
+  }

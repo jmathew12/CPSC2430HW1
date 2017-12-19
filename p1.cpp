@@ -1,0 +1,91 @@
+/* 
+   James Mathew
+   p1.cpp
+   Susan Reeder
+   CPSC 2430
+   10/03/2017
+   This program takes a string as input and checks to see whether if the string 
+   provided is a palindrome or not. 
+   
+   **********************************BUGS**************************************
+   Does not print the results correctly. " is a palindrome" instead of
+   "x is a palindrome." except for the last test.
+   
+   Also causes issues when the number of characters added to the list is 
+   more than 21. Possible memory leak.
+   ****************************************************************************
+*/
+
+#include <iostream>
+#include <string>
+#include "stack.h"
+#include <fstream>
+#include <cstring>
+#include <cctype>
+#include <stdio.h>
+
+using namespace std;
+
+/* Constructor, takes in the input line and checks to see if it is a 
+   palindrome or not and let the user know that it is or it isn't.
+*/
+
+//const string READFILE = "/home/fac/sreeder/class/cs2430/p1input.dat";
+	const string READFILE = "palindromeTests.txt";
+
+int main()
+{
+  
+  ifstream input;
+  string line;
+  
+  // open the file
+  input.open("palindromeTests.txt");
+   //input.open(READFILE); // commented out since does not work
+  
+  // check that it is open/readable
+  if (input.fail()){
+    cout << endl 
+         << "Sorry, file not available...exiting program...press enter"
+         << endl;
+    cin.get();  // grab the enter
+    return 0;
+  }
+  int indexHelper;
+  char tempLetter;
+  bool test;
+  int j;
+  // read data and checks if it a palindrome
+  while (getline(input, line)){
+    test = true;
+    indexHelper = 0;
+    cout << "The line read was: " << line << endl;
+	Stack letters(4);
+	j = 0;
+	// stores the data
+	while(line[j]) {
+      if (isalnum(line[j])) {
+        letters.push(tolower(line[j]));
+        indexHelper++;
+      }
+	  j++;
+    }
+	// checks if it is a palindrome
+    for (int i = 0; i < (indexHelper/2); i++) { 
+	  letters.pop(tempLetter);
+      if(letters.peek(i) != tempLetter) {
+        test = false;
+      }
+    }
+	cout << "\"" << line << "\"" << endl;
+	// display the result
+	if (test) { 
+      cout <<" is a palindrome." << endl;
+    } else {
+      cout <<" is not a palindrome." << endl;
+    }
+  }
+  // close file
+  input.close();
+  return 0;
+}
